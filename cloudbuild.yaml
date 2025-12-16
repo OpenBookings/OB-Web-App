@@ -3,13 +3,13 @@ steps:
     args:
     - build
     - '-t'
-    - '$_AR_HOSTNAME/$PROJECT_ID/$_AR_REPO/$_SERVICE_NAME:$COMMIT_SHA'
+    - '$_AR_HOSTNAME/$PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA'
     - '.'
 
   - name: gcr.io/cloud-builders/docker
     args:
     - push
-    - '$_AR_HOSTNAME/$PROJECT_ID/$_AR_REPO/$_SERVICE_NAME:$COMMIT_SHA'
+    - '$_AR_HOSTNAME/$PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA'
 
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
     args:
@@ -17,7 +17,7 @@ steps:
     - deploy
     - $_SERVICE_NAME
     - '--image'
-    - '$_AR_HOSTNAME/$PROJECT_ID/$_AR_REPO/$_SERVICE_NAME:$COMMIT_SHA'
+    - '$_AR_HOSTNAME/$PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA'
     - '--region'
     - $_DEPLOY_REGION
     - '--platform'
