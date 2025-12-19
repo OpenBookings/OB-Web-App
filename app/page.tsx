@@ -3,6 +3,7 @@
 import { useState } from "react";
 import FocusOverlay from "@/components/FocusOverlay";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { Calendar05 } from "@/components/DatePicker";
 
 import {
   InputGroup,
@@ -16,7 +17,8 @@ export default function Home() {
   const [people, setPeople] = useState(2);
   const [destination, setDestination] = useState("");
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpenSearchBar] = useState(false);
+  const [openDatePicker, setOpenDatePicker] = useState(false);
 
   const CalendarIcon = () => (
     <svg className="w-5 h-5" fill="none" stroke="white" viewBox="0 0 24 24">
@@ -40,30 +42,10 @@ export default function Home() {
     </svg>
   );
 
-  const ChevronDownIcon = () => (
-    <svg className="w-4 h-4" fill="none" stroke="white" viewBox="0 0 24 24">
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M19 9l-7 7-7-7"
-      />
-    </svg>
-  );
-
-  const PaperPlaneIcon = () => (
-    <svg
-      className="w-8 h-8"
-      fill="none"
-      stroke="white"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
-      <polygon points="2 22 23 12 2 2 6 12 2 22" />
-      <line x1="6" y1="12" x2="23" y2="12" />
+  // magnifying glass icon
+  const MagnifyingGlassIcon = () => (
+    <svg className="w-5 h-5" fill="none" stroke="white" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
     </svg>
   );
 
@@ -99,20 +81,23 @@ export default function Home() {
       <div className="fixed bottom-8 right-8 w-96 max-w-[calc(100vw-4rem)] z-50">
         <div className="bg-black/30 backdrop-blur-2xl rounded-3xl border border-white/20 shadow-2xl p-6">
           <div className="flex flex-col gap-5">
+            <h2 className="text-3xl font-semibold tracking-tight mb-3 text-white/90">
+              The world is waiting...
+            </h2>
             {/* Destination - Centered with navigation arrows */}
             <InputGroup>
               <InputGroupInput
                 placeholder="Destination..."
                 value={destination ?? ""}
                 readOnly
-                onClick={() => setOpen(true)}
+                onClick={() => setOpenSearchBar(true)}
                 className="cursor-pointer"
               />
               <InputGroupAddon>
-                <PaperPlaneIcon />
+                <MagnifyingGlassIcon />
               </InputGroupAddon>
             </InputGroup>
-            <FocusOverlay open={open} onClose={() => setOpen(false)}>
+            <FocusOverlay open={open} onClose={() => setOpenSearchBar(false)}>
               <div className="bg-black/40 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl p-6">
                 <InputGroup className="bg-white/5 border-white/20">
                   <InputGroupInput
@@ -122,88 +107,107 @@ export default function Home() {
                     autoFocus
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        setOpen(false);
+                        setOpenSearchBar(false);
                       }
                     }}
                     className="text-white placeholder:text-slate-400"
                   />
                   <InputGroupAddon>
-                      <PaperPlaneIcon />
+                    <MagnifyingGlassIcon />
                   </InputGroupAddon>
                   <InputGroupAddon align="inline-end">
-                      <Kbd
-                        onClick={() => setOpen(false)}
-                        className="bg-black text-white font-semibold cursor-pointer"
-                      >
-                        ESC
-                      </Kbd>
+                    <Kbd
+                      onClick={() => setOpenSearchBar(false)}
+                      className="bg-black text-white font-semibold cursor-pointer"
+                    >
+                      ESC
+                    </Kbd>
                   </InputGroupAddon>
                 </InputGroup>
               </div>
             </FocusOverlay>
 
-            {/* Date Pickers - Side by Side with distinct styling */}
-            <div className="flex gap-3">
-              {/* From Date */}
-              <div className="flex-1 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-3 cursor-pointer hover:bg-white/10 transition-all group">
-                <div className="flex items-center gap-2 mb-1">
-                  <CalendarIcon />
-                  <div className="text-xs text-slate-300 font-medium">From</div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-white font-medium relative flex-1">
+            {/* Date Picker - From and Till as one field */}
+            <div
+              className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-3 cursor-pointer hover:bg-white/10 transition-all group flex items-center gap-3"
+              // Use your own handler to open date picker modal/dialog
+              onClick={() => setOpenDatePicker(true)}
+            >
+              <CalendarIcon />
+              <div className="flex-1 flex items-center gap-2">
+                {/* From Date */}
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-slate-400 font-medium mb-0.5">
+                    From
+                  </div>
+                  <div className="text-sm text-white font-medium truncate">
                     {checkIn ? (
-                      <span>
+                      <span className="text-white">
                         {new Date(checkIn).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
+                          year: "numeric",
                         })}
                       </span>
                     ) : (
                       <span className="text-slate-400">Select date</span>
                     )}
-                    <input
-                      type="date"
-                      value={checkIn ?? ""}
-                      onChange={(e) => setCheckIn(e.target.value)}
-                      min={new Date().toISOString().split("T")[0]}
-                      className="absolute inset-0 opacity-0 cursor-pointer"
-                    />
                   </div>
-                  <ChevronDownIcon />
                 </div>
-              </div>
-
-              {/* Till Date */}
-              <div className="flex-1 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-3 cursor-pointer hover:bg-white/10 transition-all group">
-                <div className="flex items-center gap-2 mb-1">
-                  <CalendarIcon />
-                  <div className="text-xs text-slate-300 font-medium">Till</div>
+                
+                {/* Separator */}
+                <div className="flex-shrink-0 px-2">
+                  <div className="w-px h-8 bg-white/20"></div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-white font-medium relative flex-1">
+                
+                {/* Till Date */}
+                <div className="flex-1 min-w-0 text-right">
+                  <div className="text-xs text-slate-400 font-medium mb-0.5">
+                    Till
+                  </div>
+                  <div className="text-sm text-white font-medium truncate">
                     {checkOut ? (
-                      <span>
+                      <span className="text-white">
                         {new Date(checkOut).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
+                          year: "numeric",
                         })}
                       </span>
                     ) : (
                       <span className="text-slate-400">Select date</span>
                     )}
-                    <input
-                      type="date"
-                      value={checkOut ?? ""}
-                      onChange={(e) => setCheckOut(e.target.value)}
-                      min={checkIn || new Date().toISOString().split("T")[0]}
-                      className="absolute inset-0 opacity-0 cursor-pointer"
-                    />
                   </div>
-                  <ChevronDownIcon />
                 </div>
               </div>
             </div>
+            {/* Date picker overlay - optional, implement accordingly */}
+            <FocusOverlay
+              open={openDatePicker}
+              onClose={() => setOpenDatePicker(false)}
+            >
+              <div className="bg-black/40 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl p-6 flex justify-center">
+                <Calendar05
+                  checkIn={checkIn}
+                  checkOut={checkOut}
+                  onDateChange={(dateRange) => {
+                    // Update check-in date
+                    if (dateRange?.from) {
+                      setCheckIn(dateRange.from.toISOString());
+                    } else {
+                      setCheckIn("");
+                    }
+
+                    // Update check-out date
+                    if (dateRange?.to) {
+                      setCheckOut(dateRange.to.toISOString());
+                    } else {
+                      setCheckOut("");
+                    }
+                  }}
+                />
+              </div>
+            </FocusOverlay>
 
             {/* Guests Selector */}
             <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-3">
