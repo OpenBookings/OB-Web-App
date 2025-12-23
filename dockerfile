@@ -30,3 +30,5 @@
     
     CMD ["npm", "start"]
     
+    RUN chown -R 1000:1000 /app
+    USER 1000
