@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import FocusOverlay from "@/components/FocusOverlay";
-import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { Kbd } from "@/components/ui/kbd";
 import { Calendar05 } from "@/components/DatePicker";
 
 import {
@@ -11,43 +11,16 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 
+import { CalendarIcon, PersonIcon, MagnifyingGlassIcon } from "@/components/Icons";
+
 export default function Home() {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [people, setPeople] = useState(2);
   const [destination, setDestination] = useState("");
 
-  const [open, setOpenSearchBar] = useState(false);
+  const [openSearchBar, setOpenSearchBar] = useState(false);
   const [openDatePicker, setOpenDatePicker] = useState(false);
-
-  const CalendarIcon = () => (
-    <svg className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" stroke="white" viewBox="0 0 24 24">
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-      />
-    </svg>
-  );
-
-  const PersonIcon = () => (
-    <svg className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" stroke="white" viewBox="0 0 24 24">
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-      />
-    </svg>
-  );
-
-  // magnifying glass icon
-  const MagnifyingGlassIcon = () => (
-    <svg className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" stroke="white" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-    </svg>
-  );
 
   return (
     <main className="min-h-screen text-white relative">
@@ -55,37 +28,45 @@ export default function Home() {
       <div
         className="fixed inset-0 bg-black bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: "url('/image.png')",
+          backgroundImage: "url('/backgrounds/Colosseum.jpg')",
         }}
       >
-        {/* {/* Dark overlay for text readability */}
+        {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-black/40"></div>
       </div>
 
       {/* Main content - CTA */}
-      <div className="min-h-screen flex items-center justify-start px-8 md:px-12 lg:px-16 relative z-10">
-        <div className="max-w-4xl text-left">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-4">
-            Discover{" "}
-            <span className="bg-clip-text text-transparent bg-linear-to-r from-indigo-400 via-purple-400 to-pink-400">
-              Hotels
-            </span>
-          </h1>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-4 text-gray-300">
-            Quick, Easy & Open-Source
-          </h1>
+      <div className="min-h-screen flex items-end justify-start px-8 sm:pb-8 md:px-12 lg:px-16 relative z-10">
+        <div className="max-w-4xl text-left flex items-center">
+          <div className="flex flex-col items-center justify-center mr-7">
+            <div
+              className="bg-gray-300 w-1 rounded-full mb-2"
+              style={{ height: "calc(7.5rem)" }}
+            ></div>
+          </div>
+          <div className="flex flex-col justify-center">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-3 select-none">
+              Discover{" "}
+              <span className="bg-clip-text text-transparent bg-linear-to-r from-indigo-400 via-purple-400 to-pink-400 select-none">
+                Rome
+              </span>
+            </h1>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight mb-4 ml-0.5 text-gray-300 select-none">
+              Quick, Easy & Open-Source
+            </h1>
+          </div>
         </div>
       </div>
 
       {/* Search box at right bottom - Glassmorphism design */}
       <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 left-4 sm:left-auto w-auto sm:w-96 max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-4rem)] z-50">
         <div className="bg-black/30 backdrop-blur-2xl rounded-2xl sm:rounded-3xl border border-white/20 shadow-2xl p-4 sm:p-6">
-          <div className="flex flex-col gap-3 sm:gap-5">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight mb-2 sm:mb-3 text-white/90">
+          <div className="flex flex-col sm:gap-5">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-white/90">
               The world is waiting...
             </h2>
             {/* Destination - Centered with navigation arrows */}
-            <InputGroup>
+            <InputGroup className="bg-black/50 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all group">
               <InputGroupInput
                 placeholder="Destination..."
                 value={destination ?? ""}
@@ -97,31 +78,21 @@ export default function Home() {
                 <MagnifyingGlassIcon />
               </InputGroupAddon>
             </InputGroup>
-            <FocusOverlay open={open} onClose={() => setOpenSearchBar(false)}>
-              <div className="bg-black/40 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/20 shadow-2xl p-4 sm:p-6 w-full max-w-[calc(100vw-2rem)] sm:max-w-md">
-                <InputGroup className="bg-white/5 border-white/20">
+
+            <FocusOverlay
+              open={openSearchBar}
+              onClose={() => setOpenSearchBar(false)}
+            >
+              <div>
+                <InputGroup className=" backdrop-blur-sm rounded-lg sm:rounded-xl border border-white/10">
                   <InputGroupInput
                     placeholder="Where are you going?"
                     value={destination ?? ""}
                     onChange={(e) => setDestination(e.target.value)}
-                    autoFocus
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        setOpenSearchBar(false);
-                      }
-                    }}
-                    className="text-white placeholder:text-slate-400 text-sm sm:text-base"
+                    className="text-white"
                   />
                   <InputGroupAddon>
                     <MagnifyingGlassIcon />
-                  </InputGroupAddon>
-                  <InputGroupAddon align="inline-end">
-                    <Kbd
-                      onClick={() => setOpenSearchBar(false)}
-                      className="bg-black text-white font-semibold cursor-pointer text-xs sm:text-sm"
-                    >
-                      ESC
-                    </Kbd>
                   </InputGroupAddon>
                 </InputGroup>
               </div>
@@ -130,7 +101,6 @@ export default function Home() {
             {/* Date Picker - From and Till as one field */}
             <div
               className="bg-white/5 backdrop-blur-sm rounded-lg sm:rounded-xl border border-white/10 p-2.5 sm:p-3 cursor-pointer hover:bg-white/10 transition-all group flex items-center gap-2 sm:gap-3"
-              // Use your own handler to open date picker modal/dialog
               onClick={() => setOpenDatePicker(true)}
             >
               <CalendarIcon />
@@ -181,31 +151,13 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            {/* Date picker overlay - optional, implement accordingly */}
+
             <FocusOverlay
               open={openDatePicker}
               onClose={() => setOpenDatePicker(false)}
             >
-              <div className="bg-black/40 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/20 shadow-2xl p-3 sm:p-4 md:p-6 flex justify-center w-full max-w-[calc(100vw-2rem)] sm:max-w-lg overflow-auto">
-                <Calendar05
-                  checkIn={checkIn}
-                  checkOut={checkOut}
-                  onDateChange={(dateRange) => {
-                    // Update check-in date
-                    if (dateRange?.from) {
-                      setCheckIn(dateRange.from.toISOString());
-                    } else {
-                      setCheckIn("");
-                    }
-
-                    // Update check-out date
-                    if (dateRange?.to) {
-                      setCheckOut(dateRange.to.toISOString());
-                    } else {
-                      setCheckOut("");
-                    }
-                  }}
-                />
+              <div>
+                <Calendar05 />
               </div>
             </FocusOverlay>
 
