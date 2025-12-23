@@ -1,0 +1,21 @@
+# Security & CSP rules (MANDATORY)
+
+- Never generate inline JavaScript.
+  - No <script>...</script> blocks in HTML.
+  - No onclick=, onchange=, onsubmit=, or any inline event handlers.
+
+- Never use eval(), new Function(), or dynamically constructed code execution.
+
+- All JavaScript must be placed in external .js or .ts files and loaded via <script src="...">.
+
+- Event handling must always use addEventListener() or framework equivalents.
+
+- Code must be compatible with a strict Content-Security-Policy:
+  script-src 'self' 'nonce-*'
+  style-src 'self' (inline styles discouraged)
+
+- If inline scripts are unavoidable, explicitly ask the user before using CSP nonces.
+
+- Prefer progressive enhancement and unobtrusive JavaScript.
+
+- Any generated HTML must pass CSP validation with NO 'unsafe-inline' or 'unsafe-eval'.
