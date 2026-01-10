@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Auth0Provider } from "@auth0/nextjs-auth0/client";
+import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,10 +18,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <head>
-        <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="cea90d99-6fb6-4db4-9820-9c25fd17ba0a" data-blockingmode="auto" type="text/javascript"></script>
-      </head>
       <body>
+        <Script
+          id="Cookiebot"
+          src="https://consent.cookiebot.com/uc.js"
+          data-cbid="cea90d99-6fb6-4db4-9820-9c25fd17ba0a"
+          data-blockingmode="auto"
+          strategy="afterInteractive"
+        />
         <Auth0Provider>
           {children}
         </Auth0Provider>
