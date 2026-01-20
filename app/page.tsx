@@ -87,7 +87,6 @@ export default function Home() {
         {user ? (
           <>
             <img
-              ref={profileImageRef}
               src={user.photoURL || "/profile_avatar.png"}
               alt="Profile"
               className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 rounded-full object-cover cursor-pointer hover:ring-2 hover:ring-white/50 transition-all border-2 border-white/20"
@@ -100,7 +99,7 @@ export default function Home() {
             <ProfilePopup
               open={openProfilePopup}
               onClose={() => setOpenProfilePopup(false)}
-              anchorRef={profileImageRef}
+              anchorRef={null as unknown as React.RefObject<HTMLElement | null>}
               user={user}
             />
           </>
