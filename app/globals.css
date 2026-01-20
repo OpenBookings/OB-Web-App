@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "@firebase-oss/ui-styles/tailwind";
 
 :root {
   --background: oklch(0.1405 0.0044 285.8238);
@@ -157,7 +158,7 @@
   }
 }
 
-/* Auth0 Integration Styles */
+/* Auth and profile styles */
 
 .loading-state, .error-state {
   background-color: #2d313c;
@@ -207,13 +208,6 @@
   max-width: 500px;
   width: 90%;
   animation: fadeInScale 0.8s ease-out forwards;
-}
-
-.auth0-logo {
-  width: 160px;
-  margin-bottom: 1.5rem;
-  opacity: 0;
-  animation: slideInDown 1s ease-out forwards 0.2s;
 }
 
 .main-title {
@@ -384,9 +378,5 @@
   .button {
     padding: 0.9rem 2rem;
     font-size: 1rem;
-  }
-  
-  .auth0-logo {
-    width: 120px;
   }
 }

@@ -9,14 +9,19 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "^4.14.0",
+    "@firebase-oss/ui-react": "^7.0.2-beta",
+    "@hookform/resolvers": "^5.2.2",
     "@maptiler/sdk": "^3.9.0",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "algoliasearch": "^5.46.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "firebase": "^12.8.0",
     "firebase-admin": "^13.6.0",
+    "input-otp": "^1.4.2",
     "lucide-react": "^0.562.0",
     "maplibre-gl": "^5.15.0",
     "next": "16.0.10",
@@ -25,8 +30,10 @@
     "react": "19.2.1",
     "react-day-picker": "^9.13.0",
     "react-dom": "19.2.1",
+    "react-hook-form": "^7.71.1",
     "react-instantsearch": "^7.0.0",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",

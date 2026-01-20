@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { onAuthStateChanged } from "firebase/auth";
+import { useUI } from "@firebase-oss/ui-react";
+import type { User } from "firebase/auth";
 import FocusOverlay from "@/components/FocusOverlay";
 import { Calendar05 } from "@/components/DatePicker";
 import { getRandomBackgroundImage } from "@/lib/background";
 import LoginButton from "@/components/LoginButton";
-import LogoutButton from "@/components/LogoutButton";
-import Profile from "@/components/Profile";
 import ProfilePopup from "@/components/ProfilePopup";
+import { SignInAuthScreen } from "@/components/sign-in-auth-screen";
 
 import {
   InputGroup,
@@ -24,7 +25,7 @@ import {
 import { SearchBar } from "@/components/SearchBar";
 
 export default function Home() {
-  const { user, isLoading: userLoading } = useUser();
+  const [user, setUser] = useState<User | null>(null);
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [people, setPeople] = useState(2);
@@ -33,13 +34,21 @@ export default function Home() {
   const [openSearchBar, setOpenSearchBar] = useState(false);
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [openProfilePopup, setOpenProfilePopup] = useState(false);
+  const [openSignIn, setOpenSignIn] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState<{ url: string; name: string; gradientA: string; gradientB: string } | null>(null);
   const profileImageRef = useRef<HTMLImageElement>(null);
+
+  const ui = useUI();
 
   // Set random background only on client side to avoid hydration mismatch
   useEffect(() => {
     setBackgroundImage(getRandomBackgroundImage());
   }, []);
+
+  // Subscribe to Firebase auth state
+  useEffect(() => {
+    return onAuthStateChanged(ui.auth, setUser);
+  }, [ui.auth]);
 
   return (
     <main className="min-h-screen text-white relative">
@@ -76,14 +85,12 @@ export default function Home() {
 
       {/* Profile in top right corner */}
       <div className="fixed top-0 right-0 p-4 sm:p-6 md:p-8 z-20 flex flex-row items-center gap-2 sm:gap-3">
-        {userLoading ? (
-          <LoginButton />
-        ) : user ? (
+        {user ? (
           <>
             <img
               ref={profileImageRef}
-              src={user.picture || "/profile_avatar.png"}
-              alt={user.name || "Profile"}
+              src={user.photoURL || "/profile_avatar.png"}
+              alt="Profile"
               className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 rounded-full object-cover cursor-pointer hover:ring-2 hover:ring-white/50 transition-all border-2 border-white/20"
               onClick={() => setOpenProfilePopup(!openProfilePopup)}
               onError={(e) => {
@@ -95,12 +102,25 @@ export default function Home() {
               open={openProfilePopup}
               onClose={() => setOpenProfilePopup(false)}
               anchorRef={profileImageRef}
+              user={user}
             />
           </>
         ) : (
-          <LoginButton />
+          <LoginButton onClick={() => setOpenSignIn(true)} />
         )}
       </div>
+
+      <FocusOverlay
+        open={openSignIn}
+        onClose={() => setOpenSignIn(false)}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+        >
+          <SignInAuthScreen onSignIn={() => setOpenSignIn(false)} />
+        </div>
+      </FocusOverlay>
 
       {/* Main content - CTA */}
       <div className="fixed bottom-0 left-0 flex items-end justify-start px-8 sm:pb-8 md:px-12 lg:px-16 z-10">

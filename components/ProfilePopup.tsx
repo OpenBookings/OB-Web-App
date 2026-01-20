@@ -1,13 +1,14 @@
 "use client";
 
-import { useUser } from "@auth0/nextjs-auth0/client";
 import { useEffect, useRef } from "react";
+import { signOut } from "firebase/auth";
+import { useUI } from "@firebase-oss/ui-react";
+import type { User } from "firebase/auth";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
-  CardContent,
   CardFooter,
 } from "@/components/ui/card";
 
@@ -15,15 +16,26 @@ interface ProfilePopupProps {
   open: boolean;
   onClose: () => void;
   anchorRef: React.RefObject<HTMLElement | null>;
+  user: User | null;
 }
 
 export default function ProfilePopup({
   open,
   onClose,
   anchorRef,
+  user,
 }: ProfilePopupProps) {
-  const { user } = useUser();
+  const ui = useUI();
   const popupRef = useRef<HTMLDivElement>(null);
+
+  async function handleSignOut() {
+    try {
+      await signOut(ui.auth);
+      onClose();
+    } catch {
+      // ignore
+    }
+  }
 
   // Close on ESC key
   useEffect(() => {
@@ -77,18 +89,19 @@ export default function ProfilePopup({
                 Welcome back!
               </CardTitle>
               <CardDescription className="text-sm text-white/70 truncate">
-                {user.name || "Name"}
+                {user.displayName || user.email || "User"}
               </CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardFooter className="border-t border-white/10 pt-4">
-          <a
-            href="/auth/logout"
+          <button
+            type="button"
+            onClick={handleSignOut}
             className="w-full px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-medium transition-all text-center text-sm"
           >
             Sign out
-          </a>
+          </button>
         </CardFooter>
       </Card>
     </div>
