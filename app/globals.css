@@ -158,8 +158,6 @@
   }
 }
 
-/* Auth and profile styles */
-
 .loading-state, .error-state {
   background-color: #2d313c;
   border-radius: 15px;

@@ -36,7 +36,6 @@ export default function Home() {
   const [openProfilePopup, setOpenProfilePopup] = useState(false);
   const [openSignIn, setOpenSignIn] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState<{ url: string; name: string; gradientA: string; gradientB: string } | null>(null);
-  const profileImageRef = useRef<HTMLImageElement>(null);
 
   const ui = useUI();
 
