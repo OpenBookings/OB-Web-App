@@ -7,7 +7,7 @@ export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? "https://openbookings.co",
   secret: process.env.BETTER_AUTH_SECRET!,
   database: new Pool({
-    connectionString: process.env.DATABASE_URL ?? process.env.NEXT_PUBLIC_DATABASE_URL,
+    connectionString: process.env.DATABASE_URL,
   }),
   plugins: [
     magicLink({
