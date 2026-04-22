@@ -164,7 +164,7 @@ export function AuthFormFields({
             <div className="w-full min-h-[238px] flex flex-col justify-center items-center text-center gap-3">
                 <h3 className="text-2xl font-semibold text-white">Email sent successfully</h3>
                 <p className="text-white/85 max-w-xs">
-                    Please check your inbox{sentEmail ? ` at ${sentEmail}` : ""}.
+                    Please check your inbox{sentEmail ? ` at ${sentEmail}` : ""}
                 </p>
                 <Button
                     type="button"
