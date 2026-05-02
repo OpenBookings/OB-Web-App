@@ -15,28 +15,20 @@ const PRIVATE_ACCOUNT_MESSAGE =
 export default function Home() {
   const [backgroundSrc, setBackgroundSrc] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
-  const [sessionReady, setSessionReady] = useState(false);
 
   const router = useRouter();
   const { data: session, isPending: sessionPending } = authClient.useSession();
 
-  // sessionPending is false on the server (no fetch), so we can't use it directly
-  // as the overlay trigger. Instead, sessionReady starts false on both server and
-  // client, and only flips true once the client confirms the check is done.
-  useEffect(() => {
-    if (!sessionPending) {
-      setSessionReady(true);
-    }
-  }, [sessionPending]);
+  // Only reveal the login form once we've confirmed there is no active session.
+  // While pending OR while a session exists (redirect in progress), keep the
+  // splash visible so the login page never flashes through.
+  const showLogin = !sessionPending && !session?.user;
 
   useEffect(() => {
-    if (session?.user) {
-      const timeout = setTimeout(() => {
-        router.replace("/onboarding");
-      }, 1500);
-      return () => clearTimeout(timeout);
+    if (!sessionPending && session?.user) {
+      router.replace("/onboarding");
     }
-  }, [session, router]);
+  }, [session, sessionPending, router]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -89,8 +81,8 @@ export default function Home() {
 
   return (
     <main className="fixed inset-0 min-h-screen bg-background">
-      {/* Auth loading splash — fades out once session check resolves */}
-      <AuthLoadingScreen visible={!sessionReady} />
+      {/* Auth loading splash — hidden only once we confirm no active session */}
+      <AuthLoadingScreen visible={!showLogin} />
 
       <div
         className="absolute inset-0 bg-black bg-cover bg-center bg-no-repeat z-0"
@@ -110,7 +102,7 @@ export default function Home() {
       {/* Login card — fades in as splash fades out */}
       <div
         className="relative z-10 flex items-center justify-center min-h-screen w-full backdrop-blur-xl transition-opacity duration-500"
-        style={{ opacity: sessionReady ? 1 : 0 }}
+        style={{ opacity: showLogin ? 1 : 0 }}
       >
         <AuthFormPhaseProvider>
           <SS_AuthForm>
