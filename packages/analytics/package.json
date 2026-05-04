@@ -1,0 +1,20 @@
+{
+  "name": "@openbookings/analytics",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./client": "./src/client.tsx",
+    "./server": "./src/server.ts"
+  },
+  "dependencies": {
+    "posthog-js": "^1.372.5",
+    "posthog-node": "^5.31.0"
+  },
+  "peerDependencies": {
+    "next": "*",
+    "react": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}
