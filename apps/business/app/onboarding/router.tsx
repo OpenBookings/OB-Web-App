@@ -17,7 +17,11 @@ export default async function OnboardingRouter() {
   );
 
   const completed = new Set(row?.completed_steps ?? []);
-  const next = HOST_STEPS.find((s) => !completed.has(s)) ?? HOST_STEPS[0];
+  const next = HOST_STEPS.find((s) => !completed.has(s));
+
+  if (!next) {
+    redirect("/dashboard");
+  }
 
   redirect(`/onboarding/${next}`);
   return null;
